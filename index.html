@@ -2,6 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yılbaşı Sürprizi</title>
 
 <style>
@@ -17,7 +18,7 @@ body{
 /* KAR */
 canvas{
   position:fixed;
-  top:0;left:0;
+  inset:0;
   pointer-events:none;
   z-index:1;
 }
@@ -30,32 +31,30 @@ canvas{
   z-index:2;
 }
 
-/* AĞAÇ */
+/* AĞAÇ (RESPONSIVE) */
 .tree{
   position:absolute;
-  bottom:-400px;
+  bottom:0;
   left:50%;
-  transform:translateX(-50%) scale(0.4);
-  font-size:420px;
-  animation:treeRise 5s ease-out forwards;
+  transform:translateX(-50%);
+  font-size:clamp(220px, 60vw, 420px);
+  animation:treeRise 4s ease-out forwards;
   filter:drop-shadow(0 0 25px rgba(0,255,150,.5));
 }
 
 @keyframes treeRise{
-  to{
-    bottom:-40px;
-    transform:translateX(-50%) scale(1);
-  }
+  from{transform:translateX(-50%) scale(.6);}
+  to{transform:translateX(-50%) scale(1);}
 }
 
-/* AĞAÇ IŞIKLARI */
+/* IŞIK */
 .tree::after{
   content:"✨ ✨ ✨";
   position:absolute;
   top:35%;
   left:50%;
   transform:translateX(-50%);
-  font-size:40px;
+  font-size:clamp(20px, 4vw, 40px);
   animation:lights 1.2s infinite alternate;
 }
 
@@ -64,45 +63,33 @@ canvas{
   to{opacity:1;}
 }
 
-/* NOEL BABA PNG */
-.santa{
-  position:absolute;
-  top:120px;
-  left:-500px;
-  width:260px;
-  animation:santaFly 9s linear forwards;
-  filter:drop-shadow(0 15px 25px rgba(0,0,0,.6));
-}
-
-@keyframes santaFly{
-  0%{left:-500px; transform:translateY(0) rotate(-5deg);}
-  25%{transform:translateY(-15px) rotate(-3deg);}
-  50%{transform:translateY(10px) rotate(0deg);}
-  75%{transform:translateY(-10px) rotate(2deg);}
-  100%{left:110%; transform:translateY(0) rotate(4deg);}
-}
-
-/* HEDİYE */
+/* HEDİYE (YUKARIDAN DÜŞER) */
 .gift{
   position:absolute;
-  bottom:60px;
+  top:-150px;
   left:50%;
-  transform:translateX(-50%) scale(0.7);
-  font-size:90px;
+  transform:translateX(-50%) scale(.7);
+  font-size:clamp(60px, 10vw, 90px);
   opacity:0;
-  animation:giftDrop 2s ease-out forwards;
-  animation-delay:5.5s;
+  animation:giftDrop 2.2s ease-out forwards;
+  animation-delay:4s;
 }
 
 @keyframes giftDrop{
-  from{transform:translate(-50%,-200px) scale(.7);opacity:0;}
-  to{transform:translate(-50%,0) scale(1);opacity:1;}
+  from{
+    transform:translate(-50%,-200px) scale(.7);
+    opacity:0;
+  }
+  to{
+    transform:translate(-50%,0) scale(1);
+    opacity:1;
+  }
 }
 
 /* PARLAMA */
 .glow{
   position:absolute;
-  bottom:120px;
+  bottom:140px;
   left:50%;
   width:220px;
   height:220px;
@@ -118,10 +105,10 @@ canvas{
   bottom:180px;
   left:50%;
   transform:translateX(-50%) scale(0);
-  font-size:100px;
+  font-size:clamp(60px, 10vw, 100px);
   cursor:pointer;
   animation:envelopeShow 1.2s ease forwards;
-  animation-delay:7.5s;
+  animation-delay:6.5s;
 }
 
 @keyframes envelopeShow{
@@ -136,7 +123,7 @@ canvas{
   text-align:center;
   opacity:0;
   animation:fadeIn 1s forwards;
-  animation-delay:8.5s;
+  animation-delay:7.5s;
 }
 
 button{
@@ -159,7 +146,7 @@ button{
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:380px;
+  width:min(380px, 90vw);
   background:#f8fafc;
   color:#000;
   padding:22px;
@@ -187,14 +174,11 @@ button{
 <canvas id="snow"></canvas>
 
 <div class="scene">
-
   <div class="tree">🎄</div>
-
-  <!-- PNG NOEL BABA -->
-  <img src="assets/santa_sled.png" class="santa">
 
   <div class="gift">🎁</div>
   <div class="glow" id="glow"></div>
+
   <div class="envelope">✉️</div>
 
   <div class="question">
@@ -211,17 +195,21 @@ button{
     </p>
     <div class="signature">— seni seviyorumm</div>
   </div>
-
 </div>
 
 <script>
-/* KAR YAĞIŞI */
+/* KAR */
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
-let flakes = Array.from({length:140},()=>({
+window.onresize=()=>{
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+
+let flakes = Array.from({length:150},()=>({
   x:Math.random()*canvas.width,
   y:Math.random()*canvas.height,
   r:Math.random()*3+1,
@@ -248,7 +236,7 @@ function snow(){
 }
 setInterval(snow,30);
 
-/* ZARF AÇILINCA */
+/* ZARF AÇ */
 function openLetter(){
   document.querySelector(".question").style.display="none";
   const glow=document.getElementById("glow");
