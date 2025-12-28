@@ -17,8 +17,9 @@ body{
 /* KAR */
 canvas{
   position:fixed;
-  top:0; left:0;
+  top:0;left:0;
   pointer-events:none;
+  z-index:1;
 }
 
 /* SAHNE */
@@ -26,6 +27,7 @@ canvas{
   position:relative;
   width:100%;
   height:100%;
+  z-index:2;
 }
 
 /* AĞAÇ */
@@ -36,7 +38,7 @@ canvas{
   transform:translateX(-50%) scale(0.4);
   font-size:420px;
   animation:treeRise 5s ease-out forwards;
-  filter:drop-shadow(0 0 20px rgba(0,255,150,.4));
+  filter:drop-shadow(0 0 25px rgba(0,255,150,.5));
 }
 
 @keyframes treeRise{
@@ -46,15 +48,15 @@ canvas{
   }
 }
 
-/* AĞAÇ IŞIK */
+/* AĞAÇ IŞIKLARI */
 .tree::after{
-  content:"✨✨✨";
+  content:"✨ ✨ ✨";
   position:absolute;
   top:35%;
   left:50%;
   transform:translateX(-50%);
   font-size:40px;
-  animation:lights 1.5s infinite alternate;
+  animation:lights 1.2s infinite alternate;
 }
 
 @keyframes lights{
@@ -62,17 +64,22 @@ canvas{
   to{opacity:1;}
 }
 
-/* NOEL BABA */
+/* NOEL BABA PNG */
 .santa{
   position:absolute;
-  top:80px;
-  left:-600px;
-  font-size:120px;
-  animation:santaFly 8s linear forwards;
+  top:120px;
+  left:-500px;
+  width:260px;
+  animation:santaFly 9s linear forwards;
+  filter:drop-shadow(0 15px 25px rgba(0,0,0,.6));
 }
 
 @keyframes santaFly{
-  to{left:110%;}
+  0%{left:-500px; transform:translateY(0) rotate(-5deg);}
+  25%{transform:translateY(-15px) rotate(-3deg);}
+  50%{transform:translateY(10px) rotate(0deg);}
+  75%{transform:translateY(-10px) rotate(2deg);}
+  100%{left:110%; transform:translateY(0) rotate(4deg);}
 }
 
 /* HEDİYE */
@@ -97,8 +104,8 @@ canvas{
   position:absolute;
   bottom:120px;
   left:50%;
-  width:200px;
-  height:200px;
+  width:220px;
+  height:220px;
   transform:translateX(-50%);
   border-radius:50%;
   background:radial-gradient(circle, rgba(255,255,200,.8), transparent 70%);
@@ -180,8 +187,11 @@ button{
 <canvas id="snow"></canvas>
 
 <div class="scene">
+
   <div class="tree">🎄</div>
-  <div class="santa">🛷🎅</div>
+
+  <!-- PNG NOEL BABA -->
+  <img src="assets/santa_sled.png" class="santa">
 
   <div class="gift">🎁</div>
   <div class="glow" id="glow"></div>
@@ -201,16 +211,17 @@ button{
     </p>
     <div class="signature">— seni seviyorumm</div>
   </div>
+
 </div>
 
 <script>
-// KAR YAĞIŞI
+/* KAR YAĞIŞI */
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let flakes = Array.from({length:120},()=>({
+let flakes = Array.from({length:140},()=>({
   x:Math.random()*canvas.width,
   y:Math.random()*canvas.height,
   r:Math.random()*3+1,
@@ -237,12 +248,13 @@ function snow(){
 }
 setInterval(snow,30);
 
-// ZARF AÇILINCA PARLAMA
+/* ZARF AÇILINCA */
 function openLetter(){
   document.querySelector(".question").style.display="none";
   const glow=document.getElementById("glow");
   glow.style.opacity=1;
   glow.style.animation="fadeIn 1s alternate 4";
+
   setTimeout(()=>{
     glow.style.display="none";
     document.getElementById("letter").style.display="block";
