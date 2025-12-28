@@ -34,15 +34,23 @@ canvas{
 /* AĞAÇ (RESPONSIVE) */
 .tree{
   position:absolute;
-  bottom:env(safe-area-inset-bottom);
   left:50%;
+  bottom:0;
   transform:translateX(-50%);
-  font-size:65vh; /* 🔥 TELEFONDA TAM SIĞAR */
-  max-height:90vh;
-  line-height:1;
-  animation:treeRise 3s ease-out forwards;
+  height:85vh;              /* 🔥 ekranın %85’i */
+  display:flex;
+  align-items:flex-end;     /* 🔥 altı sabitle */
+  overflow:hidden;          /* 🔥 emoji taşmasını kes */
+  pointer-events:none;
   filter:drop-shadow(0 0 25px rgba(0,255,150,.5));
 }
+
+.tree-inner{
+  font-size:85vh;           /* 🔥 birebir aynı */
+  line-height:0.8;          /* 🔥 gizli boşluğu öldürür */
+  transform:translateY(6%); /* 🔥 alt boşluğu telafi */
+}
+
 
 @keyframes treeRise{
   from{transform:translateX(-50%) scale(.6);}
@@ -175,8 +183,9 @@ button{
 
 <canvas id="snow"></canvas>
 
-<div class="scene">
-  <div class="tree">🎄</div>
+<div class="tree">
+  <span class="tree-inner">🎄</span>
+</div>
 
   <div class="gift">🎁</div>
   <div class="glow" id="glow"></div>
