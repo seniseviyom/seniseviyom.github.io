@@ -2,20 +2,26 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Yılbaşı Sürprizi 🎄</title>
+<title>Yılbaşı Sürprizi</title>
+
 <style>
 body{
   margin:0;
   height:100vh;
-  background:#0b0f1a;
+  background:linear-gradient(#020617,#0b1225);
   overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:Arial, sans-serif;
+  font-family:"Segoe UI",sans-serif;
   color:white;
 }
 
+/* KAR */
+canvas{
+  position:fixed;
+  top:0; left:0;
+  pointer-events:none;
+}
+
+/* SAHNE */
 .scene{
   position:relative;
   width:100%;
@@ -25,128 +31,160 @@ body{
 /* AĞAÇ */
 .tree{
   position:absolute;
-  bottom:-150px;
+  bottom:-400px;
   left:50%;
-  transform:translateX(-50%) scale(0.2);
-  font-size:120px;
-  animation:treeRise 4s ease-out forwards;
+  transform:translateX(-50%) scale(0.4);
+  font-size:420px;
+  animation:treeRise 5s ease-out forwards;
+  filter:drop-shadow(0 0 20px rgba(0,255,150,.4));
 }
 
 @keyframes treeRise{
   to{
-    bottom:35%;
+    bottom:-40px;
     transform:translateX(-50%) scale(1);
   }
+}
+
+/* AĞAÇ IŞIK */
+.tree::after{
+  content:"✨✨✨";
+  position:absolute;
+  top:35%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:40px;
+  animation:lights 1.5s infinite alternate;
+}
+
+@keyframes lights{
+  from{opacity:.3;}
+  to{opacity:1;}
 }
 
 /* NOEL BABA */
 .santa{
   position:absolute;
-  top:50px;
-  left:-150px;
-  font-size:80px;
-  animation:santaFly 6s linear forwards;
+  top:80px;
+  left:-600px;
+  font-size:120px;
+  animation:santaFly 8s linear forwards;
 }
 
 @keyframes santaFly{
-  to{ left:110%; }
+  to{left:110%;}
 }
 
 /* HEDİYE */
 .gift{
   position:absolute;
-  top:120px;
+  bottom:60px;
   left:50%;
-  transform:translateX(-50%);
-  font-size:60px;
+  transform:translateX(-50%) scale(0.7);
+  font-size:90px;
   opacity:0;
-  animation:giftDrop 2s ease-in forwards;
-  animation-delay:4s;
+  animation:giftDrop 2s ease-out forwards;
+  animation-delay:5.5s;
 }
 
 @keyframes giftDrop{
-  to{
-    top:45%;
-    opacity:1;
-  }
+  from{transform:translate(-50%,-200px) scale(.7);opacity:0;}
+  to{transform:translate(-50%,0) scale(1);opacity:1;}
+}
+
+/* PARLAMA */
+.glow{
+  position:absolute;
+  bottom:120px;
+  left:50%;
+  width:200px;
+  height:200px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,200,.8), transparent 70%);
+  opacity:0;
 }
 
 /* ZARF */
 .envelope{
   position:absolute;
-  top:45%;
+  bottom:180px;
   left:50%;
-  transform:translate(-50%, -50%) scale(0);
-  font-size:80px;
+  transform:translateX(-50%) scale(0);
+  font-size:100px;
   cursor:pointer;
-  animation:envelopeShow 1s ease forwards;
-  animation-delay:6s;
+  animation:envelopeShow 1.2s ease forwards;
+  animation-delay:7.5s;
 }
 
 @keyframes envelopeShow{
-  to{ transform:translate(-50%, -50%) scale(1); }
+  to{transform:translateX(-50%) scale(1);}
 }
 
 /* SORU */
 .question{
   position:absolute;
-  bottom:15%;
+  bottom:60px;
   width:100%;
   text-align:center;
   opacity:0;
   animation:fadeIn 1s forwards;
-  animation-delay:7s;
+  animation-delay:8.5s;
 }
 
 button{
+  padding:12px 26px;
   margin:10px;
-  padding:10px 20px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
+  font-size:17px;
   cursor:pointer;
-  font-size:16px;
 }
 
-.open{ background:#00ffcc; }
-.close{ background:#ff4d4d; }
+.open{background:#22c55e;}
+.close{background:#ef4444;}
 
-@keyframes fadeIn{
-  to{ opacity:1; }
-}
+@keyframes fadeIn{to{opacity:1;}}
 
 /* MEKTUP */
 .letter{
   position:absolute;
   top:50%;
   left:50%;
-  transform:translate(-50%, -50%);
-  width:320px;
-  background:#fff;
+  transform:translate(-50%,-50%);
+  width:380px;
+  background:#f8fafc;
   color:#000;
-  padding:20px;
-  border-radius:10px;
+  padding:22px;
+  border-radius:12px;
   display:none;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
   animation:letterOpen 1s ease;
 }
 
 @keyframes letterOpen{
-  from{ transform:translate(-50%, -50%) scale(0.5); opacity:0;}
-  to{ transform:translate(-50%, -50%) scale(1); opacity:1;}
+  from{opacity:0;transform:translate(-50%,-50%) scale(.6);}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1);}
 }
 
 .signature{
   text-align:right;
-  margin-top:15px;
+  margin-top:18px;
   font-style:italic;
 }
 </style>
 </head>
+
 <body>
+
+<canvas id="snow"></canvas>
 
 <div class="scene">
   <div class="tree">🎄</div>
-  <div class="santa">🎅</div>
+  <div class="santa">🛷🎅</div>
+
   <div class="gift">🎁</div>
+  <div class="glow" id="glow"></div>
   <div class="envelope">✉️</div>
 
   <div class="question">
@@ -157,8 +195,8 @@ button{
 
   <div class="letter" id="letter">
     <p>
-      Noel Babadan seni istedim de birileri seni kaçırmaya gelirse,  
-      Noel Baba uslu çocuğa hediyesini getirecek demektir.  
+      Noel Babadan seni istedim de birileri seni kaçırmaya gelirse,<br><br>
+      Noel Baba uslu çocuğa hediyesini getirecek demektir.<br>
       Sakın korkma.
     </p>
     <div class="signature">— seni seviyorumm</div>
@@ -166,9 +204,49 @@ button{
 </div>
 
 <script>
+// KAR YAĞIŞI
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let flakes = Array.from({length:120},()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  r:Math.random()*3+1,
+  d:Math.random()+1
+}));
+
+function snow(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  flakes.forEach(f=>{
+    ctx.moveTo(f.x,f.y);
+    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+  });
+  ctx.fill();
+
+  flakes.forEach(f=>{
+    f.y+=f.d;
+    if(f.y>canvas.height){
+      f.y=0;
+      f.x=Math.random()*canvas.width;
+    }
+  });
+}
+setInterval(snow,30);
+
+// ZARF AÇILINCA PARLAMA
 function openLetter(){
-  document.querySelector('.question').style.display="none";
-  document.getElementById('letter').style.display="block";
+  document.querySelector(".question").style.display="none";
+  const glow=document.getElementById("glow");
+  glow.style.opacity=1;
+  glow.style.animation="fadeIn 1s alternate 4";
+  setTimeout(()=>{
+    glow.style.display="none";
+    document.getElementById("letter").style.display="block";
+  },1200);
 }
 </script>
 
