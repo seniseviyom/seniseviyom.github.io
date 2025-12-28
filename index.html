@@ -6,11 +6,16 @@
 <title>Yılbaşı Sürprizi</title>
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  height:100vh;
+  min-height:100vh;
   background:linear-gradient(#020617,#0b1225);
   overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
   font-family:"Segoe UI",sans-serif;
   color:white;
 }
@@ -25,123 +30,86 @@ canvas{
 
 /* SAHNE */
 .scene{
-  position:relative;
   width:100%;
   height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  position:relative;
   z-index:2;
 }
 
-/* AĞAÇ (RESPONSIVE) */
+/* AĞAÇ – KESİLME YOK */
 .tree{
-  position:absolute;
-  left:50%;
-  bottom:0;
-  transform:translateX(-50%);
-  height:85vh;              /* 🔥 ekranın %85’i */
-  display:flex;
-  align-items:flex-end;     /* 🔥 altı sabitle */
-  overflow:hidden;          /* 🔥 emoji taşmasını kes */
-  pointer-events:none;
+  font-size:min(70vh, 90vw);   /* 🔥 ekran küçülünce otomatik küçülür */
+  line-height:1;
+  margin-bottom:-6vh;          /* 🔥 emoji alt boşluk telafisi */
   filter:drop-shadow(0 0 25px rgba(0,255,150,.5));
+  user-select:none;
 }
 
-.tree-inner{
-  font-size:85vh;           /* 🔥 birebir aynı */
-  line-height:0.8;          /* 🔥 gizli boşluğu öldürür */
-  transform:translateY(6%); /* 🔥 alt boşluğu telafi */
-}
-
-
-@keyframes treeRise{
-  from{transform:translateX(-50%) scale(.6);}
-  to{transform:translateX(-50%) scale(1);}
-}
-
-/* IŞIK */
-.tree::after{
-  content:"✨ ✨ ✨";
-  position:absolute;
-  top:35%;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:clamp(20px, 4vw, 40px);
-  animation:lights 1.2s infinite alternate;
-}
-
-@keyframes lights{
-  from{opacity:.3;}
-  to{opacity:1;}
-}
-
-/* HEDİYE (YUKARIDAN DÜŞER) */
+/* HEDİYE */
 .gift{
   position:absolute;
-  top:-150px;
-  left:50%;
-  transform:translateX(-50%) scale(.7);
-  font-size:clamp(60px, 10vw, 90px);
-  opacity:0;
-  animation:giftDrop 2.2s ease-out forwards;
-  animation-delay:4s;
+  top:-120px;
+  font-size:80px;
+  animation:giftFall 2.5s ease-out forwards;
+  animation-delay:2s;
 }
 
-@keyframes giftDrop{
-  from{
-    transform:translate(-50%,-200px) scale(.7);
-    opacity:0;
-  }
-  to{
-    transform:translate(-50%,0) scale(1);
-    opacity:1;
-  }
+@keyframes giftFall{
+  to{ top:calc(100% - 18vh); }
 }
 
 /* PARLAMA */
 .glow{
   position:absolute;
-  bottom:140px;
-  left:50%;
+  bottom:16vh;
   width:220px;
   height:220px;
-  transform:translateX(-50%);
   border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,200,.8), transparent 70%);
+  background:radial-gradient(circle, rgba(255,255,200,.9), transparent 70%);
   opacity:0;
+  animation:glow 1s ease forwards;
+  animation-delay:4.2s;
+}
+
+@keyframes glow{
+  to{opacity:1;}
 }
 
 /* ZARF */
 .envelope{
   position:absolute;
-  bottom:180px;
-  left:50%;
-  transform:translateX(-50%) scale(0);
-  font-size:clamp(60px, 10vw, 100px);
+  bottom:20vh;
+  font-size:90px;
+  opacity:0;
+  animation:showEnv 1s ease forwards;
+  animation-delay:5s;
   cursor:pointer;
-  animation:envelopeShow 1.2s ease forwards;
-  animation-delay:6.5s;
 }
 
-@keyframes envelopeShow{
-  to{transform:translateX(-50%) scale(1);}
+@keyframes showEnv{
+  to{opacity:1;}
 }
 
 /* SORU */
 .question{
   position:absolute;
-  bottom:60px;
-  width:100%;
+  bottom:6vh;
   text-align:center;
   opacity:0;
   animation:fadeIn 1s forwards;
-  animation-delay:7.5s;
+  animation-delay:6s;
 }
 
 button{
   padding:12px 26px;
-  margin:10px;
+  margin:8px;
   border:none;
   border-radius:10px;
-  font-size:17px;
+  font-size:16px;
   cursor:pointer;
 }
 
@@ -152,23 +120,22 @@ button{
 
 /* MEKTUP */
 .letter{
-  position:absolute;
+  position:fixed;
   top:50%;
   left:50%;
-  transform:translate(-50%,-50%);
-  width:min(380px, 90vw);
+  transform:translate(-50%,-50%) scale(.7);
+  width:min(90vw,380px);
   background:#f8fafc;
   color:#000;
   padding:22px;
   border-radius:12px;
   display:none;
   box-shadow:0 20px 50px rgba(0,0,0,.5);
-  animation:letterOpen 1s ease;
+  animation:openLetter 1s ease forwards;
 }
 
-@keyframes letterOpen{
-  from{opacity:0;transform:translate(-50%,-50%) scale(.6);}
-  to{opacity:1;transform:translate(-50%,-50%) scale(1);}
+@keyframes openLetter{
+  to{transform:translate(-50%,-50%) scale(1);}
 }
 
 .signature{
@@ -183,13 +150,12 @@ button{
 
 <canvas id="snow"></canvas>
 
-<div class="tree">
-  <span class="tree-inner">🎄</span>
-</div>
+<div class="scene">
+
+  <div class="tree">🎄</div>
 
   <div class="gift">🎁</div>
-  <div class="glow" id="glow"></div>
-
+  <div class="glow"></div>
   <div class="envelope">✉️</div>
 
   <div class="question">
@@ -198,27 +164,28 @@ button{
     <button class="close">Açma</button>
   </div>
 
-  <div class="letter" id="letter">
-    <p>
-      Noel Babadan seni istedim de birileri seni kaçırmaya gelirse,<br><br>
-      Noel Baba uslu çocuğa hediyesini getirecek demektir.<br>
-      Sakın korkma.
-    </p>
-    <div class="signature">— seni seviyorumm</div>
-  </div>
+</div>
+
+<div class="letter" id="letter">
+  <p>
+    Noel Babadan seni istedim de birileri seni kaçırmaya gelirse,<br><br>
+    Noel Baba uslu çocuğa hediyesini getirecek demektir.<br>
+    Sakın korkma.
+  </p>
+  <div class="signature">— seni seviyorumm</div>
 </div>
 
 <script>
 /* KAR */
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
-canvas.width = innerWidth;
-canvas.height = innerHeight;
 
-window.onresize=()=>{
+function resize(){
   canvas.width = innerWidth;
   canvas.height = innerHeight;
 }
+resize();
+addEventListener("resize", resize);
 
 let flakes = Array.from({length:150},()=>({
   x:Math.random()*canvas.width,
@@ -247,17 +214,11 @@ function snow(){
 }
 setInterval(snow,30);
 
-/* ZARF AÇ */
+/* ZARF */
 function openLetter(){
   document.querySelector(".question").style.display="none";
-  const glow=document.getElementById("glow");
-  glow.style.opacity=1;
-  glow.style.animation="fadeIn 1s alternate 4";
-
-  setTimeout(()=>{
-    glow.style.display="none";
-    document.getElementById("letter").style.display="block";
-  },1200);
+  document.querySelector(".envelope").style.display="none";
+  document.getElementById("letter").style.display="block";
 }
 </script>
 
